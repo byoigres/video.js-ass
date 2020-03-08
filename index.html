@@ -1,0 +1,85 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="//vjs.zencdn.net/5.4.6/video-js.css" rel="stylesheet">
+</head>
+<body>
+    <div id="my-container">
+        <video id="my-player" class="video-js">
+            <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+            <source src="//vjs.zencdn.net/v/oceans.webm" type="video/webm">
+        </video>
+    </div>
+    <div id="my-container-copy">
+        <video id="my-player-copy" class="video-js">
+            <source src="/elan.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div id="subs"></div>
+    <button id="button-play">Play</button>
+    <button id="button-pause">Pause</button>
+    <script src="//vjs.zencdn.net/5.4.6/video.js"></script>
+    <script src="/Youtube.js"></script>
+    <script src="/ass.js"></script>
+    <script>
+        window.videojsi = videojs('my-player', {
+            controls: true,
+            autoplay: false,
+            preload: 'auto',
+            fill: true,
+            techOrder: [
+                "youtube"
+            ],
+            sources: [
+                {
+                    type: "video/youtube",
+                    src: "https://www.youtube.com/watch?v=zPonioDYnoY"
+                }
+            ],
+            youtube: {
+                customVars: {
+                    wmode: "transparent"
+                }
+            }
+        });
+        
+        window.videojsicopy = videojs('my-player-copy');
+
+        const playButton = document.getElementById('button-play');
+        const pauseButton = document.getElementById('button-pause');
+
+        playButton.addEventListener('click', () => {
+            fetch('https://metalsubs.github.io/bands/nightwish/endless-forms-most-beautiful/elan.ass')
+                .then(res => res.text())
+                .then((text) => {
+                    const ass = new ASS(
+                        text,
+                        'my-player',
+                        {
+                            container: document.getElementById('my-container'),
+                            resampling: 'video_width',
+                            videojs: videojsi
+                        }
+                    );
+                });
+        });
+
+        pauseButton.addEventListener('click', () => {
+            fetch('https://metalsubs.github.io/bands/nightwish/endless-forms-most-beautiful/elan.ass')
+                .then(res => res.text())
+                .then((text) => {
+                    const ass = new ASS(
+                        text,
+                        document.getElementById('my-player-copy_html5_api'),
+                        {
+                            container: document.getElementById('my-container-copy'),
+                            resampling: 'video_width',
+                        }
+                    );
+                });
+        });
+    </script>
+</body>
+</html>
